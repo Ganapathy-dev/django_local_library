@@ -7,7 +7,7 @@ class BookInline(admin.TabularInline):
     extra=2
 
 class AuthorAdmin(admin.ModelAdmin):
-    list_display=('last_name','first_name','date_of_birth','date_of_death')
+    list_display=('first_name','last_name','date_of_birth','date_of_death')
     fields=['first_name','last_name',('date_of_birth','date_of_death')]
     inlines=[BookInline]
     
@@ -27,7 +27,7 @@ class BookInstanceAdmin(admin.ModelAdmin):
             'fields': ('book', 'imprint', 'id')
         }),
         ('Availability', {
-            'fields': ('status', 'due_back')
+            'fields': ('status', 'due_back',"borrower")
         }),
     )
 
