@@ -1,13 +1,14 @@
 from typing import Any
 import datetime
 from django.db.models.query import QuerySet
+from django.forms import BaseModelForm
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from .models import Book, Author, BookInstance, Genre
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required,permission_required
 from django.contrib.auth.mixins import PermissionRequiredMixin
-from django.http import HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from catalog.forms import RenewBookForm
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
@@ -62,6 +63,7 @@ class BookDetailView(LoginRequiredMixin,generic.DetailView):
 
 class AuthorListView(LoginRequiredMixin,generic.ListView):
     model=Author
+    paginate_by=10
     context_object_name='author_list'
     template_name='catalog/author_list.html'
 
@@ -94,9 +96,9 @@ class BorrowedListView(LoginRequiredMixin,generic.ListView):
         return(
             BookInstance.objects.filter(status__exact='o').order_by('due_back')
         )
-
 @login_required
-def renew_book_librarian(request, pk):
+@permission_required('catalog.staff_level')
+def renew_book_librarian(request,pk):
     book_instance=get_object_or_404(BookInstance,pk=pk)
 
     if request.method=='POST':
@@ -122,6 +124,16 @@ class AuthorCreate(PermissionRequiredMixin, CreateView):
     fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
     initial = {'date_of_death': '11/11/2023','date_of_birth':'11/07/1967'}
     permission_required = 'catalog.staff_level'
+
+    def form_valid(self,form):
+        dob=form.cleaned_data['date_of_birth']
+        dod=form.cleaned_data['date_of_death']
+
+        if dob and dod and dob > dod:
+            form.add_error('date_of_birth','Birth date cannot be after death date')
+            return self.form_invalid(form)
+        return super().form_valid(form)
+
 
 class AuthorUpdate(PermissionRequiredMixin, UpdateView):
     model = Author
