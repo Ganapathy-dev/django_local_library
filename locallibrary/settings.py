@@ -82,13 +82,19 @@ WSGI_APPLICATION = 'locallibrary.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'locallib',
-        'USER':'user1',
-        'PASSWORD':'user@123',
-        'HOST':'localhost',
-        'PORT':'3306'
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME':BASE_DIR/'db.sqlite3',
+        
     }
+
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'locallib',
+    #     'USER':'user1',
+    #     'PASSWORD':'user@123',
+    #     'HOST':'localhost',
+    #     'PORT':'3306'
+    # }
 }
 
 
@@ -152,11 +158,3 @@ STATIC_ROOT=BASE_DIR/'staticfiles'
 STATIC_URL='/static/'
 
 
-# Static file serving.
-# https://whitenoise.readthedocs.io/en/stable/django.html#add-compression-and-caching-support
-STORAGES = {
-    # ...
-    "staticfiles": {
-        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
-    },
-}
