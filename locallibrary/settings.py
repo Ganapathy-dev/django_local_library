@@ -30,8 +30,9 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY','django-insecure-3^z@vj!z=cz+b9t
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DJANGO_DEBUB','')!='False'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['Ganapathy.pythonanywhere.com', '127.0.0.1']
 
+CSRF_TRUSTED_ORIGINS = ['https://Ganapathy.pythonanywhere.com']
 
 # Application definition
 
