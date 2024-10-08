@@ -21,7 +21,7 @@ def index(request):
     """ View funtion for home page of the site."""
 
     num_books=Book.objects.all().count()
-    num_instance=Book.objects.all().count()
+    num_instance=BookInstance.objects.all().count()
     num_instances_available=BookInstance.objects.filter(status__exact='a').count()
     num_authors=Author.objects.count()
     num_genre=Genre.objects.all().count()
